@@ -13,15 +13,10 @@ from bot import (
     LOG_FILE_ZZGEVC,
     MAX_MESSAGE_LENGTH,
     AUTH_USERS,
-    crf,
-    watermark,
     data,
-    resolution,
     pid_list,
-    bit,
-    preset
+    FFMPEG
 )
-
 
 from bot.commands import Command
 from bot.localisation import Localisation
@@ -29,9 +24,11 @@ from bot.helper_funcs.display_progress import (
     TimeFormatter,
     humanbytes
 )
-
-
-
+from bot.helper_funcs.ffmpeg import (
+  media_info,
+  take_screen_shot,
+  get_width_height
+)
 
 async def exec_message_f(client, message):
   if message.from_user.id in AUTH_USERS:
@@ -149,3 +146,75 @@ async def upload_log_file(client, message):
     )
   else:
     return
+
+async def run_subprocess(cmd):
+    process = await asyncio.create_subprocess_shell(
+        cmd,
+        stdout=asyncio.subprocess.PIPE,
+        stderr=asyncio.subprocess.PIPE
+    )
+    return await process.communicate()
+
+async def upload_dir(client, message):
+  if message.from_user.id in AUTH_USERS:
+    if True:
+        cmd1 = message.text.split(" ", maxsplit=1)[1]
+        print(cmd1)
+        replyid = message.message_id
+        if message.reply_to_message:
+          replyid = message.reply_to_message.message_id
+  if os.path.exists(cmd1):
+    xhamster = await message.reply_text('Uploading The File 📁')
+    await client.send_document(
+                chat_id=message.chat.id,
+                document=cmd1,
+                caption=cmd1,
+                reply_to_message_id=replyid,
+        )
+    await xhamster.delete_messages
+  else:
+     await message.reply_text(f"Directory Not Found ```{cmd1}```", parse_mode="markdown")
+        
+async def sample_gen(app, message):
+  if message.reply_to_message:
+     vid = message.reply_to_message.message_id
+     dp = await message.reply_to_message.reply_text("Downloading The Video", parse_mode="markdown")
+     video = await app.download_media(
+        message=message.reply_to_message,
+        file_name='/app/samplevideo.mkv',
+        )
+     await dp.edit("Downloading Finished Starting To Generate Sample")
+     video_file='/app/samplevideo.mkv'
+     output_file='/app/sample_video.mkv'
+     await dp.edit("Generating Sample...This May Take Few Moments")
+     file_gen_cmd = f'ffmpeg -ss 00:30 -i "{video_file}" -map 0 -c:v copy -c:a copy -t 30 "{output_file}" -y'
+     output = await run_subprocess(file_gen_cmd)   
+     duration, bitrate = await media_info(output_file)
+     output_thumb = '/app/thumb_output.jpeg'
+     thumb_cmd = f'ffmpeg -i {output_file} -ss 00:15 -frames:v 1 "{output_thumb}" -y'
+     output = await run_subprocess(thumb_cmd)
+     width, height = get_width_height(output_file)
+  else:
+     await message.reply_text('NO FILE DETECTED')
+  if os.path.exists(output_file):
+     await dp.edit('Uploading The Video')
+     chat_id = message.chat.id
+     upload = await app.send_video(
+        chat_id=message.chat.id,
+        video=output_file,
+        caption="Sample Generated From 00:30 Of 30 SECONDS",
+        supports_streaming=True,
+        duration=duration,
+        width=width,
+        height=height,
+        file_name=output_file,
+        thumb=output_thumb,
+        reply_to_message_id=vid
+     )
+     await dp.delete()
+     os.remove(video_file)
+     os.remove(output_file)
+     os.remove(output_thumb)
+  else:
+     await dp.edit("Failed To Generate Sample Due To Locked Infrastructure")
+     os.remove(video_file)

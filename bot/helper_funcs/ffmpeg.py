@@ -12,6 +12,8 @@ import re
 import json
 import subprocess
 import math
+from hachoir.metadata import extractMetadata
+from hachoir.parser import createParser
 from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 from bot.helper_funcs.display_progress import (
   TimeFormatter
@@ -21,43 +23,27 @@ from bot import (
     FINISHED_PROGRESS_STR,
     UN_FINISHED_PROGRESS_STR,
     DOWNLOAD_LOCATION,
-    FFMPEG,
-    crf,
-    watermark,
     pid_list,
-    resolution,
-    bit,
-    preset
+    FFMPEG,
 )
 
 async def convert_video(video_file, output_directory, total_time, bot, message, chan_msg):
     # https://stackoverflow.com/a/13891070/4723940
     kk = video_file.split("/")[-1]
     aa = kk.split(".")[-1]
-    out_put_file_name = kk.replace(f".{aa}", " [@FIERCENETWORK].mkv")
+    out_put_file_name = kk.replace(f".{aa}", " [@ANIXPO].mkv")
     #out_put_file_name = video_file + "_compressed" + ".mkv"
     progress = output_directory + "/" + "progress.txt"
     with open(progress, 'w') as f:
       pass
-    ##  -metadata title='DarkEncodes [Join t.me/AnimesInLowSize]' -vf drawtext=fontfile=Italic.ttf:fontsize=20:fontcolor=black:x=15:y=15:text='Dark Encodes'
-    ##"-metadata", "title=@SenpaiAF", "-vf", "drawtext=fontfile=njnaruto.ttf:fontsize=20:fontcolor=black:x=15:y=15:text=" "Dark Encodes",
-     ## -vf eq=gamma=1.4:saturation=1.4
-     ## lol 😂
-    crf.append("28.9")
-    resolution.append("854x480")
-    bit.append("yuv420p")
-    preset.append("")
-    watermark.append("")
-    file_genertor_command = FFMPEG 
- #For Ffmpeg Use
+   
+    file_genertor_command = FFMPEG.format(progress, video_file, out_put_file_name)
     COMPRESSION_START_TIME = time.time()
     process = await asyncio.create_subprocess_shell(
           file_genertor_command,
-          # stdout must a pipe to be accessible as process.stdout
            stdout=asyncio.subprocess.PIPE,
            stderr=asyncio.subprocess.PIPE,
           )
-    #stdout, stderr = await process.communicate()
     
     LOGGER.info("ffmpeg_process: "+str(process.pid))
     pid_list.insert(0, process.pid)
@@ -102,21 +88,21 @@ async def convert_video(video_file, output_directory, total_time, bot, message, 
         if difference > 0:
           ETA = TimeFormatter(difference*1000)
         percentage = math.floor(elapsed_time * 100 / total_time)
-        progress_str = "📈 <b>Progress:</b> {0}%\n[{1}{2}]".format(
+        progress_str = "<b>Percentage ⏰ :</b> {0}%\n[{1}{2}]".format(
             round(percentage, 2),
             ''.join([FINISHED_PROGRESS_STR for i in range(math.floor(percentage / 10))]),
             ''.join([UN_FINISHED_PROGRESS_STR for i in range(10 - math.floor(percentage / 10))])
             )
-        stats = f'🗳 <b>ENCODING IN PROGRESS</b>\n\n' \
-                f'⌚ <b>TIME LEFT:</b> {ETA}\n\n' \
-                f'{progress_str}\n'
+        stats = f'┏━━━━━━━━━━━━━━━━━\n┣📁 <b>Encoding The Given File</b>\n' \
+                f'┣⌚ <b>Estimated Time:</b> {ETA}\n' \
+                f'┣{progress_str}\n┗━━━━━━━━━━━━━━━━━'
         try:
           await message.edit_text(
             text=stats,
             reply_markup=InlineKeyboardMarkup(
                 [
                     [ 
-                        InlineKeyboardButton('❌ Cancel ❌', callback_data='fuckingdo') # Nice Call 🤭
+                        InlineKeyboardButton('❌ Cancel ❌', callback_data='fuckingdo')
                     ]
                 ]
             )
@@ -132,7 +118,7 @@ async def convert_video(video_file, output_directory, total_time, bot, message, 
     r = stderr.decode()
     try:
         if er:
-           await message.edit_text(str(er) + "\n\n**ERROR** Contact @SenpaiAF")
+           await message.edit_text(str(er) + "\n\n**ERROR**")
            os.remove(videofile)
            os.remove(out_put_file_name)
            return None
@@ -198,17 +184,22 @@ async def take_screen_shot(video_file, output_directory, ttl):
         
         process = await asyncio.create_subprocess_exec(
             *file_genertor_command,
-            # stdout must a pipe to be accessible as process.stdout
             stdout=asyncio.subprocess.PIPE,
             stderr=asyncio.subprocess.PIPE,
         )
-        # Wait for the subprocess to finish
+        
         stdout, stderr = await process.communicate()
         e_response = stderr.decode().strip()
         t_response = stdout.decode().strip()
-    #
+        
     if os.path.lexists(out_put_file_name):
         return out_put_file_name
     else:
         return None
-# senpai I edited this,  maybe if it is wrong correct it 
+
+def get_width_height(video_file):
+    metadata = extractMetadata(createParser(video_file))
+    if metadata.has("width") and metadata.has("height"):
+        return metadata.get("width"), metadata.get("height")
+    else:
+        return 1280, 720

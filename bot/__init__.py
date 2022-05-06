@@ -1,53 +1,32 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-# (c) Shrimadhav U K
-
-# the logging things
+#NIRUSAKI
 import logging
 from logging.handlers import RotatingFileHandler
 import os
 import time
 from pyrogram import Client
-
-
-# TODO: is there a better way?
-
-
-
-
 from bot.config import Config
 
-
-
-# dont think ne dumb (c) @Animes_Encoded 
-cmd1 = []
 AUTH_USERS = set(Config.AUTH_USERS)
 AUTH_USERS = list(AUTH_USERS)
-AUTH_USERS.append(1391975600)
-# again lol (c) @Animes_Encoded 
+AUTH_USERS.append(5121002601)
 
+FFMPEG = Config.FFMPEG
 SESSION_NAME = Config.SESSION_NAME
 TG_BOT_TOKEN = Config.TG_BOT_TOKEN
 APP_ID = Config.APP_ID
 API_HASH = Config.API_HASH
-
-LOG_CHANNEL = Config.LOG_CHANNEL # make sure to us this 
+LOGZ = Config.LOGZ
+LOG_CHANNEL = Config.LOG_CHANNEL
 DOWNLOAD_LOCATION = "/app/downloads"
 FREE_USER_MAX_FILE_SIZE = 2097152000
 MAX_MESSAGE_LENGTH = 4096
-FINISHED_PROGRESS_STR = "▓"
-UN_FINISHED_PROGRESS_STR = "░"
+FINISHED_PROGRESS_STR = "■"
+UN_FINISHED_PROGRESS_STR = "□"
 BOT_START_TIME = time.time()
 LOG_FILE_ZZGEVC = "Log.txt"
 BOT_USERNAME = Config.BOT_USERNAME 
 UPDATES_CHANNEL = "botlogas"
 data = []
-crf = []
-watermark = []
-resolution = []
-bit = []
-preset = []
-# senpai I am changing app string WHY???????
 pid_list = []
 app = Client(
         SESSION_NAME,
