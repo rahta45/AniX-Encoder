@@ -142,11 +142,11 @@ if __name__ == "__main__" :
    
     @app.on_message(filters.incoming & filters.command(["help", f"help@{BOT_USERNAME}"]))
     async def help_message(app, message):
-        await message.reply_text("┏━━━━━━━━━━━━━━━━━\n┣✋ Hello I Am AniXcoder\n┣🧳Just Send Me Files And I Will Start Encoding\n┣📸I Will Automatically Generate Thumbnail\n┣🦾I Can Also Auto Rename\n┣🦾Created And Maintaine By\n┣@NIRUSAKI_MARVALE & @FIERCE_MARVALE\n┗━━━━━━━━━━━━━━━━━", quote=True)
+        await message.reply_text("┏━━━━━━━━━━━━━━━━\n┣✋ Hello I Am Ultron\n┣🧳Just Send Me Files And I Will Start Encoding\n┣📸I Will Automatically Generate Thumbnail\n┣🦾I Can Also Auto Rename\n┣🦾Created And Maintaine By\n┣@Rulf_MLTB 🌐 \n┗━━━━━━━━━━━━━━━━", quote=True)
         
     @app.on_message(filters.incoming & filters.command(["cmds", f"cmds@{BOT_USERNAME}"]))
     async def help_message(app, message):
-        await message.reply_text("┏━━━━━━━━━━━━━━━━━\n┣Start - To The Start\n┣Cmds- To Repeat This List\n┣ Compress - To Compress The Video Manually\n┣Eval - Solve An Argument\n┣Send Any Photo To Set As Thumbnail\n┣Delthumb - To Delete Thumbnail\n┣Ul - To Upload Fil Manually\n┣Clear - Clear The Queue\n┣Bash To Execute Linux Commands\n┣Restart - Restart The Bot\n┗━━━━━━━━━━━━━━━━━", quote=True)
+        await message.reply_text("┏━━━━━━━━━━━━━━━━\n┣Start - To The Start\n┣Cmds- To Repeat This List\n┣ Compress - To Compress The Video Manually\n┣Eval - Solve An Argument\n┣Send Any Photo To Set As Thumbnail\n┣Delthumb - To Delete Thumbnail\n┣Ul - To Upload Fil Manually\n┣Clear - Clear The Queue\n┣Bash To Execute Linux Commands\n┣Restart - Restart The Bot\n┗━━━━━━━━━━━━━━━━", quote=True)
     
     @app.on_message(filters.incoming & filters.command(["log", f"log@{BOT_USERNAME}"]))
     async def help_message(app, message):
