@@ -2,7 +2,7 @@
 from bot.get_cfg import get_config
 
 class Localisation:
-    START_TEXT = "┏━━━━━━━━━━━━━━━━━\n┣Hi,AniKids Welcome To AniXcoder\n┣I Rencode Video Using FFMPEG\n┣I Can Auto Rename Videos\n┣Master @NIRUSAKI_MARVALE\n┗━━━━━━━━━━━━━━━━━"
+    START_TEXT = "┏━━━━━━━━━━━━━━━━\n┣Hi,Guy's Welcome To Rulf Encoder Group\n┣I Rencode Video Using FFMPEG\n┣I Can Auto Rename Videos\n┣Master @cmd_rulf\n┗━━━━━━━━━━━━━━━━"
    
     ABS_TEXT = "Please don't be selfish."
     
@@ -12,13 +12,13 @@ class Localisation:
     
     UPLOAD_START = "<b>📤 Uploading 📤 </b> \n"
     
-    COMPRESS_START = "<b>🍘 Starting To Encode 🍘</b>"
+    COMPRESS_START = "<b>💿 Starting To Encode 💿</b>"
     
     RCHD_BOT_API_LIMIT = "size greater than maximum allowed size (50MB). Neverthless, Trying To Upload."
     
     RCHD_TG_API_LIMIT = "Downloaded in {} seconds.\nDetected File Size: {}\nSorry. But, I cannot upload ⬆️ files greater than 1.95GB due to Telegram API Limitations."
     
-    COMPRESS_SUCCESS = "©️ @FIERCENETWORK"
+    COMPRESS_SUCCESS = "©️ @Rulf_MLTB"
 
     COMPRESS_PROGRESS = "⏳ ETA: {}\n🚀 Progress: {}%"
 
@@ -42,7 +42,7 @@ class Localisation:
     
     HELP_MESSAGE = get_config(
         "STRINGS_HELP_MESSAGE",
-        "<b>Hi, I Am AniXcoder Just Send Me Files And I Will Start Rencoding Them</b>"
+        "<b>Hi, I Am Ultron Just Send Me Files And I Will Start Rencoding Them</b>"
     )
     WRONG_MESSAGE = get_config(
         "STRINGS_WRONG_MESSAGE",
