@@ -51,7 +51,7 @@ async def incoming_start_message_f(bot, update):
         reply_markup=InlineKeyboardMarkup(
             [
                 [
-                    InlineKeyboardButton('Join Anixpo', url='https://t.me/AniXpo')
+                    InlineKeyboardButton('Join RULF_MLTB', url='https://t.me/Rulf_MLTB')
                 ]
             ]
         ),
