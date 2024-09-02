@@ -55,7 +55,7 @@ async def incoming_start_message_f(bot, update):
                 ]
             ]
         ),
-        reply_to_message_id=update.message_id,
+        reply_to_message_id=update.id,
     )
     
 async def incoming_compress_message_f(update):
@@ -69,7 +69,7 @@ async def incoming_compress_message_f(update):
   sent_message = await bot.send_message(
   chat_id=update.chat.id,
   text=Localisation.DOWNLOAD_START,
-  reply_to_message_id=update.message_id
+  reply_to_message_id=update.id
               )
   chat_id = LOG_CHANNEL
   utc_now = datetime.datetime.utcnow()
@@ -85,7 +85,7 @@ async def incoming_compress_message_f(update):
       with open(status, 'w') as f:
         statusMsg = {
           'running': True,
-          'message': sent_message.message_id
+          'message': sent_message.id
         }
 
         json.dump(statusMsg, f, indent=2)
@@ -234,7 +234,7 @@ async def incoming_compress_message_f(update):
         height=height,
         file_name=og,
         thumb=thumbnailed,
-        reply_to_message_id=update.message_id,
+        reply_to_message_id=update.id,
         progress=progress_for_pyrogram,
         progress_args=(
           bot,
@@ -336,5 +336,5 @@ async def incoming_cancel_message_f(bot, update):
     await bot.send_message(
       chat_id=update.chat.id,
       text="No active compression exists",
-      reply_to_message_id=update.message_id
+      reply_to_message_id=update.id
     )
