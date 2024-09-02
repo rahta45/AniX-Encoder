@@ -37,9 +37,9 @@ async def exec_message_f(client, message):
         PROCESS_RUN_TIME = 100
         cmd = message.text.split(" ", maxsplit=1)[1]
 
-        reply_to_id = message.message_id
+        reply_to_id = message.id
         if message.reply_to_message:
-            reply_to_id = message.reply_to_message.message_id
+            reply_to_id = message.reply_to_message.id
 
         start_time = time.time() + PROCESS_RUN_TIME
         process = await asyncio.create_subprocess_shell(
@@ -82,7 +82,7 @@ async def eval_message_f(client, message):
 
         reply_to_id = message.message_id
         if message.reply_to_message:
-            reply_to_id = message.reply_to_message.message_id
+            reply_to_id = message.reply_to_message.id
 
         old_stderr = sys.stderr
         old_stdout = sys.stdout
@@ -162,7 +162,7 @@ async def upload_dir(client, message):
         print(cmd1)
         replyid = message.message_id
         if message.reply_to_message:
-          replyid = message.reply_to_message.message_id
+          replyid = message.reply_to_message.id
   if os.path.exists(cmd1):
     xhamster = await message.reply_text('Uploading The File 📁')
     await client.send_document(
@@ -177,7 +177,7 @@ async def upload_dir(client, message):
         
 async def sample_gen(app, message):
   if message.reply_to_message:
-     vid = message.reply_to_message.message_id
+     vid = message.reply_to_message.id
      dp = await message.reply_to_message.reply_text("Downloading The Video", parse_mode="markdown")
      video = await app.download_media(
         message=message.reply_to_message,
