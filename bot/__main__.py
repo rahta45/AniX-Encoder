@@ -59,7 +59,6 @@ if __name__ == "__main__" :
     if not os.path.isdir(DOWNLOAD_LOCATION):
         os.makedirs(DOWNLOAD_LOCATION)
         
-    app.set_parse_mode("html")
     incoming_start_message_handler = MessageHandler(
         incoming_start_message_f,
         filters=filters.command(["start", f"start@{BOT_USERNAME}"])
