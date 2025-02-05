@@ -1,40 +1,51 @@
-name: Deploy to Heroku (Docker)
+name: Deploy to Heroku
 
 on:
   workflow_dispatch:
-    inputs:
-      HEROKU_APP_NAME:
-        description: "Heroku App Name"
-        required: true
-      HEROKU_EMAIL:
-        description: "Heroku Gmail"
-        required: true
-      HEROKU_API_KEY:
-        description: "Heroku API Key"
-        required: true
-      HEROKU_TEAM:
-        description: "Heroku Team Name (Optional)"
-        required: false
 
 jobs:
   deploy:
     runs-on: ubuntu-20.04
+    env:
+      HEROKU_APP_NAME: "your-heroku-app-name"
+      HEROKU_API_KEY: "your-heroku-api-key"
+      HEROKU_EMAIL: "your-heroku-email"
+      HEROKU_TEAM_NAME: "your-heroku-team-name"
+
     steps:
-      - name: Checkout Repository
+      - name: Checkout deploy branch
         uses: actions/checkout@v4
 
-      - name: Log in to Heroku Container Registry
+      - name: Delete unnecessary directories and files
         run: |
-          echo "${{ github.event.inputs.HEROKU_API_KEY }}" | docker login --username=_ --password-stdin registry.heroku.com
+          # Directories to delete
+          for dir in bot qBittorrent web; do
+            if [ -d "./$dir" ]; then
+              echo "Deleting directory: $dir"
+              rm -rf ./$dir
+            else
+              echo "Directory not found: $dir"
+            fi
+          done
 
-      - name: Build and Push Docker Image
-        run: |
-          heroku container:push web --app ${{ github.event.inputs.HEROKU_APP_NAME }}
+          # Delete a2c.conf if it exists
+          if [ -f "./a2c.conf" ]; then
+            echo "Deleting file: a2c.conf"
+            rm -f ./a2c.conf
+          else
+            echo "File not found: a2c.conf"
+          fi
 
-      - name: Release the Container
-        run: |
-          heroku container:release web --app ${{ github.event.inputs.HEROKU_APP_NAME }}
+      - name: Deploy to Heroku
+        uses: akhileshns/heroku-deploy@v3.12.12
+        with:
+          heroku_api_key: ${{ env.HEROKU_API_KEY }}
+          heroku_app_name: ${{ env.HEROKU_APP_NAME }}
+          heroku_email: ${{ env.HEROKU_EMAIL }}
+          usedocker: true
+          appdir: "."
+          process_type: web
 
-      - name: Verify Deployment
+      - name: Restart Heroku App
         run: |
-          heroku logs --app ${{ github.event.inputs.HEROKU_APP_NAME }} --tail
+          heroku restart --app ${{ env.HEROKU_APP_NAME }}
