@@ -1,0 +1,40 @@
+name: Deploy to Heroku (Docker)
+
+on:
+  workflow_dispatch:
+    inputs:
+      HEROKU_APP_NAME:
+        description: "Heroku App Name"
+        required: true
+      HEROKU_EMAIL:
+        description: "Heroku Gmail"
+        required: true
+      HEROKU_API_KEY:
+        description: "Heroku API Key"
+        required: true
+      HEROKU_TEAM:
+        description: "Heroku Team Name (Optional)"
+        required: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Log in to Heroku Container Registry
+        run: |
+          echo "${{ github.event.inputs.HEROKU_API_KEY }}" | docker login --username=_ --password-stdin registry.heroku.com
+
+      - name: Build and Push Docker Image
+        run: |
+          heroku container:push web --app ${{ github.event.inputs.HEROKU_APP_NAME }}
+
+      - name: Release the Container
+        run: |
+          heroku container:release web --app ${{ github.event.inputs.HEROKU_APP_NAME }}
+
+      - name: Verify Deployment
+        run: |
+          heroku logs --app ${{ github.event.inputs.HEROKU_APP_NAME }} --tail
