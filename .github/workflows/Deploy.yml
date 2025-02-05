@@ -43,16 +43,23 @@ jobs:
             echo "File not found: a2c.conf"
           fi
 
-      - name: Deploy to Heroku
+      - name: Set Heroku Stack to Container
+        run: heroku stack:set container --app ${{ inputs.HEROKU_APP_NAME }}
+        env:
+          HEROKU_API_KEY: ${{ inputs.HEROKU_API_KEY }}
+
+      - name: Deploy to Heroku with Docker
         uses: akhileshns/heroku-deploy@v3.12.12
         with:
           heroku_api_key: ${{ inputs.HEROKU_API_KEY }}
           heroku_app_name: ${{ inputs.HEROKU_APP_NAME }}
           heroku_email: ${{ inputs.HEROKU_EMAIL }}
           usedocker: true
-          appdir: "."
-          process_type: web
+          docker_heroku_process_type: web
+          dontuseforce: false
+          justlogin: false
 
       - name: Restart Heroku App
-        run: |
-          heroku restart --app ${{ inputs.HEROKU_APP_NAME }}
+        run: heroku restart --app ${{ inputs.HEROKU_APP_NAME }}
+        env:
+          HEROKU_API_KEY: ${{ inputs.HEROKU_API_KEY }}
